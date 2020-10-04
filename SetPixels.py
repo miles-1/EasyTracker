@@ -16,7 +16,7 @@ class SetPixels:
         self.root = root
         self.params_f = img_dir + params
         if os.path.exists(self.params_f):
-            f = open(self.params_json)
+            f = open(self.params_f)
             self.params_json = json.load(f)
             f.close()
         else:

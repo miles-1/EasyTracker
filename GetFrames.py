@@ -92,7 +92,7 @@ class GetFrames:
                     self.prog.increase()
 
             video.release()
-            self.params_json = self.img_dir + params_json
+            self.params_json = self.img_dir + params
             if os.path.exists(self.params_json):
                 f = open(self.params_json)
                 temp = json.load(f)
