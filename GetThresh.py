@@ -151,11 +151,12 @@ class GetThresh:
         self.canvas.pack()
 
     def selectContours(self, contours):
-        for indx in range(len(contours)-1, -1, -1):
-            if cv2.contourArea(contours[indx]) < self.area_lower:
-                contours.pop(indx)
-            elif 0 < self.area_lower < self.area_upper < cv2.contourArea(contours[indx]):
-                contours.pop(indx)
+        temp = []
+        for entry in contours:
+            if (self.area_upper <= 0 or cv2.contourArea(entry) <= self.area_upper) and \
+                    self.area_lower <= cv2.contourArea(entry):
+                temp.append(entry)
+        return temp
 
     def setAndRun(self):
         """Sets threshold based off of slider value and runs the difference"""
@@ -167,7 +168,7 @@ class GetThresh:
             self.b1.config(state=tk.DISABLED)
             self.b2.config(state=tk.DISABLED)
             self.prog.place(x=600, y=230)
-            self.prog.config(length=len(self.imgs) * 2)
+            self.prog.config(length=len(self.imgs) * 2 + 10)
 
             # diff 1 files
             indx = 1
@@ -210,10 +211,11 @@ class GetThresh:
                 current2 = cv2.dilate(current2, kernel, iterations=self.dilate_it)
                 current2 = cv2.erode(current2, kernel, iterations=self.erode_it)
                 temp = cv2.bitwise_and(current1, current2)
+                temp = cv2.cvtColor(temp, cv2.COLOR_BGR2GRAY)
 
                 # collect and process contours
                 contours = cv2.findContours(temp, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
-                self.selectContours(contours)
+                contours = self.selectContours(contours)
                 contour_dict[image] = contours
 
                 # save image with contours
@@ -224,10 +226,11 @@ class GetThresh:
                 self.prog.increase()
 
             f = open(self.contour, "w")
-            json.dump(contour_dict, f)
+            json.dump(contour_dict, f, default=lambda obj: obj.tolist() if isinstance(obj, np.ndarray) else obj)
             f.close()
             self.setParams()
             self.done = True
+            self.prog.increase(num=10)
             self.window.destroy()
 
     def setParams(self):
@@ -239,9 +242,9 @@ class GetThresh:
         self.params_json["area_lower"] = self.area_lower
         self.params_json["area_upper"] = self.area_upper
         f = open(self.params, "w")
-        json.dump(f, self.params_json)
+        json.dump(self.params_json, f)
         f.close()
 
     def getDirs(self):
         """Return directories of difference pictures"""
-        return [self.diff1_p, self.diff2_p] if self.done else ["", ""]
+        return ([self.diff1_p, self.diff2_p], self.params, self.contour) if self.done else (["", ""], "", "")

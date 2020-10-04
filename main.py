@@ -49,35 +49,48 @@ class Main:
         tk.mainloop()
 
     def getFrames(self):
+        # Make window & perform function
         temp = GetFrames(self.root)
         self.root.wait_window(temp.window)
-        self.img_dir, self.params_f, self.diff_dirs, self.track_json, self.contour_json = temp.getFiles()
-        if self.img_dir:
-            self.b0.config(**args2)
-        if self.contour_json:
-            self.b2.config(**args2)
-        if self.track_json:
-            self.b3.config(**args2)
+        img_dir, params_f, diff_dirs, track_json, contour_json = temp.getFiles()
+        # Set file names, unless user just exited out of something w/o activity
+        self.img_dir = img_dir if img_dir else self.img_dir
+        self.params_f = params_f if params_f else self.params_f
+        self.diff_dirs = diff_dirs if diff_dirs else self.diff_dirs
+        self.track_json = track_json if track_json else self.track_json
+        self.contour_json = contour_json if contour_json else self.contour_json
+        # Change button colors
+        self.b0.config(**(args2 if self.img_dir else args1))
+        self.b2.config(**(args2 if self.contour_json else args1))
+        self.b3.config(**(args2 if self.track_json else args1))
 
     def setPixels(self):
         if not self.img_dir:
             messagebox.showerror(title="Premature Selection", message=em1)
         else:
+            # Make window & perform function
             temp = SetPixels(self.root, self.img_dir)
             self.root.wait_window(temp.window)
-            self.params_f = temp.getInfo()
-            if self.params_f:
-                self.b1.config(**args2)
+            params_f = temp.getInfo()
+            # Set file names, unless user just exited out of something w/o activity
+            self.params_f = params_f if params_f else self.params_f
+            # Change button colors
+            self.b1.config(**(args2 if self.params_f else args1))
 
     def getThresh(self):
         if not self.img_dir:
             messagebox.showerror(title="Premature Selection", message=em1)
         else:
+            # Make window & perform function
             temp = GetThresh(self.root, self.img_dir)
             self.root.wait_window(temp.window)
-            self.diff_dirs = temp.getDirs()
-            if self.diff_dirs[0]:
-                self.b2.config(**args2)
+            diff_dirs, params_f, contour_json = temp.getDirs()
+            # Set file names, unless user just exited out of something w/o activity
+            self.params_f = params_f if params_f else self.params_f
+            self.diff_dirs = diff_dirs if diff_dirs else self.diff_dirs
+            self.contour_json = contour_json if contour_json else self.contour_json
+            # Change button colors
+            self.b2.config(**(args2 if self.diff_dirs[0] else args1))
 
     def makeTrack(self):
         if not self.diff_dirs[0]:

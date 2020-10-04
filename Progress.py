@@ -17,8 +17,12 @@ class Progress:
     def config(self, length):
         self.length = int(length)
 
-    def increase(self):
+    def reset(self):
+        self.progress["value"] = 0
+        self.root.update()
+
+    def increase(self, num=1):
         temp = self.progress["value"]
-        self.progress["value"] = min(temp + (100 - temp)/self.length, 100)
-        self.length -= 1 if self.length > 0 else 0
+        self.progress["value"] = min(temp + num * (100 - temp)/self.length, 100) if self.length else 100
+        self.length = (self.length - num) if self.length - num > 0 else 0
         self.root.update()
