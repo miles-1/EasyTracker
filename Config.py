@@ -30,8 +30,10 @@ params_dict = {
     "canny_lower": 100,
     "canny_upper": 200,
     "kernel": 3,
-    "dilate_it": 4,
-    "erode_it": 3,
+    "dilate_it1": 4,
+    "erode_it1": 3,
+    "dilate_it2": 5,
+    "erode_it2": 5,
     "area_lower": -1,
     "area_upper": -1
 }

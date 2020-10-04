@@ -71,8 +71,10 @@ class GetThresh:
         self.canny_lower = self.params_json["canny_lower"]
         self.canny_upper = self.params_json["canny_upper"]
         self.kernel = self.params_json["kernel"]
-        self.dilate_it = self.params_json["dilate_it"]
-        self.erode_it = self.params_json["erode_it"]
+        self.dilate_it1 = self.params_json["dilate_it1"]
+        self.erode_it1 = self.params_json["erode_it1"]
+        self.dilate_it2 = self.params_json["dilate_it2"]
+        self.erode_it2 = self.params_json["erode_it2"]
         self.area_lower = self.params_json["area_lower"]
         self.area_upper = self.params_json["area_upper"]
 
@@ -128,11 +130,11 @@ class GetThresh:
         return bool(np.amax(baw))
 
     def advanced(self):
-        temp = Advanced(self.window, self.canny_lower, self.canny_upper, self.kernel, self.dilate_it, self.erode_it,
-                        self.area_lower, self.area_upper)
+        temp = Advanced(self.window, self.canny_lower, self.canny_upper, self.kernel, self.dilate_it1, self.erode_it1,
+                        self.dilate_it2, self.erode_it2, self.area_lower, self.area_upper)
         self.window.wait_window(temp.window)
-        self.canny_lower, self.canny_upper, self.kernel, self.dilate_it, self.erode_it, \
-            self.area_lower, self.area_upper = temp.getInfo()
+        self.canny_lower, self.canny_upper, self.kernel, self.dilate_it1, self.erode_it1, \
+            self.dilate_it2, self.erode_it2, self.area_lower, self.area_upper = temp.getInfo()
 
     def size(self, scalar=500):
         w = int(self.img.shape[1])
@@ -202,16 +204,18 @@ class GetThresh:
             contour_dict = {}
             kernel = np.ones((self.kernel, self.kernel))
             current2 = cv2.imread(self.diff1_p + "/" + diff1_imgs.pop(0))
-            current2 = cv2.dilate(current2, kernel, iterations=self.dilate_it)
-            current2 = cv2.erode(current2, kernel, iterations=self.erode_it)
+            current2 = cv2.dilate(current2, kernel, iterations=self.dilate_it1)
+            current2 = cv2.erode(current2, kernel, iterations=self.erode_it1)
 
             for image in diff1_imgs:
                 current1 = current2
                 current2 = cv2.imread(self.diff1_p + "/" + image)
-                current2 = cv2.dilate(current2, kernel, iterations=self.dilate_it)
-                current2 = cv2.erode(current2, kernel, iterations=self.erode_it)
+                current2 = cv2.dilate(current2, kernel, iterations=self.dilate_it1)
+                current2 = cv2.erode(current2, kernel, iterations=self.erode_it1)
                 temp = cv2.bitwise_and(current1, current2)
-                temp = cv2.cvtColor(temp, cv2.COLOR_BGR2GRAY)
+                temp = cv2.dilate(temp, kernel, iterations=self.dilate_it2)
+                temp = cv2.erode(temp, kernel, iterations=self.erode_it2)
+                temp = cv2.threshold(cv2.cvtColor(temp, cv2.COLOR_BGR2GRAY), 100, 255, cv2.THRESH_BINARY)[1]
 
                 # collect and process contours
                 contours = cv2.findContours(temp, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
@@ -237,8 +241,10 @@ class GetThresh:
         self.params_json["canny_lower"] = self.canny_lower
         self.params_json["canny_upper"] = self.canny_upper
         self.params_json["kernel"] = self.kernel
-        self.params_json["dilate_it"] = self.dilate_it
-        self.params_json["erode_it"] = self.erode_it
+        self.params_json["dilate_it1"] = self.dilate_it1
+        self.params_json["erode_it1"] = self.erode_it1
+        self.params_json["dilate_it2"] = self.dilate_it2
+        self.params_json["erode_it2"] = self.erode_it2
         self.params_json["area_lower"] = self.area_lower
         self.params_json["area_upper"] = self.area_upper
         f = open(self.params, "w")

@@ -21,7 +21,7 @@ class Main:
     def __init__(self, root):
         self.root = root
         self.root.title("EasyTracker")
-        self.img_dir = "/Users/miles/Documents/Python Projects/coding etc/Ed Hammill/Practice Miles sequence"  # DEV: change to ""
+        self.img_dir = "/Users/miles/Documents/Python Projects/coding etc/Ed Hammill/Example sequence"  # DEV: change to ""
         self.params_f = self.img_dir + params  # DEV: change to ""
         self.diff_dirs = ["", ""]
         self.contour_json = ""
