@@ -14,12 +14,21 @@ contour = CONFIG["contour"]
 params_json = params_dict.copy()
 
 
+def makedir(dir_p):
+    """Makes directory, or empties it if it is already there"""
+    if os.path.isdir(dir_p):
+        for f in os.listdir(dir_p):
+            os.remove(dir_p + "/" + f)
+    else:
+        os.mkdir(dir_p)
+
+
 class GetFrames:
     def __init__(self, root):
         self.root = root
         self.img_dir = ""
         self.perSec = -1
-        self.scale_f = ""
+        self.params_json = ""
         self.diff_dirs = ["", ""]
         self.track_json = ""
         self.contour_json = ""
@@ -52,7 +61,7 @@ class GetFrames:
             (i, frameCount) = (0, 0)
             fps = video.get(cv2.CAP_PROP_FPS)
             self.perSec = min(int(self.e0.get()), fps)
-            ratio = int(fps // int(self.perSec)) if not self.perSec else 1
+            ratio = int(fps // int(self.perSec)) if self.perSec else 1
             length_of_vid = int(video.get(cv2.CAP_PROP_FRAME_COUNT) // ratio)
 
             self.l0.config(text=f"{length_of_vid} frames to convert for video. Video fps: {fps}. "
@@ -65,10 +74,7 @@ class GetFrames:
             self.window.update()
 
             self.img_dir = f[:f.rfind(".")] + " sequence"
-            if os.path.exists(self.img_dir):
-                for i in os.listdir(self.img_dir):
-                    os.remove(self.img_dir + "/" + i)
-            os.mkdir(self.img_dir)
+            makedir(self.img_dir)
 
             if len(str(length_of_vid)) < len(str(length_of_vid + 5)):
                 length_of_vid = length_of_vid + 5
@@ -95,7 +101,7 @@ class GetFrames:
                 temp = params_json
             temp["duration"] = ratio / fps
             f = open(self.track_json, "w")
-            json.dump(f, temp)
+            json.dump(temp, f)
             f.close()
             self.exit()
         else:
@@ -105,22 +111,23 @@ class GetFrames:
     def getFolder(self):
         self.img_dir = filedialog.askdirectory()
         if self.img_dir:
-            self.scale_f = self.img_dir + params
+            self.params_json = self.img_dir + params
             self.diff_dirs = [self.img_dir + diff1, self.img_dir + diff2]
             self.track_json = self.img_dir + track
             self.contour_json = self.img_dir + contour
-            if not os.path.exists(self.scale_f):
-                self.scale_f = ""
+            if not os.path.exists(self.params_json):
+                self.params_json = ""
             if not (os.path.exists(self.diff_dirs[0]) and os.path.exists(self.diff_dirs[1]) and
                     len(os.listdir(self.diff_dirs[0])) and len(os.listdir(self.diff_dirs[1]))):
                 self.diff_dirs = ["", ""]
+            if not os.path.exists(self.contour_json):
+                self.contour_json = ""
             if not os.path.exists(self.track_json):
                 self.track_json = ""
-            if self.img_dir:
-                self.exit()
+            self.exit()
 
     def exit(self):
         self.window.destroy()
 
     def getFiles(self):
-        return self.img_dir, self.scale_f, self.diff_dirs, self.track_json, self.contour_json
+        return self.img_dir, self.params_json, self.diff_dirs, self.track_json, self.contour_json

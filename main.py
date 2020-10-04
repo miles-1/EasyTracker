@@ -90,7 +90,7 @@ class Main:
             self.diff_dirs = diff_dirs if diff_dirs else self.diff_dirs
             self.contour_json = contour_json if contour_json else self.contour_json
             # Change button colors
-            self.b2.config(**(args2 if self.diff_dirs[0] else args1))
+            self.b2.config(**(args2 if self.contour_json else args1))
 
     def makeTrack(self):
         if not self.diff_dirs[0]:
