@@ -64,7 +64,7 @@ class GetFrames:
             ratio = int(fps // int(self.perSec)) if self.perSec else 1
             length_of_vid = int(video.get(cv2.CAP_PROP_FRAME_COUNT) // ratio)
 
-            self.l0.config(text=f"{length_of_vid} frames to convert for video. Video fps: {fps}. "
+            self.l0.config(text=f"~{length_of_vid} frames to convert for video. Video fps: {fps}. "
                                 f"\nRatio of frames extracted per total: {ratio}.")
             self.e0.pack_forget()
             self.b0.pack_forget()
@@ -92,15 +92,15 @@ class GetFrames:
                     self.prog.increase()
 
             video.release()
-            self.track_json = self.img_dir + track
-            if os.path.exists(self.track_json):
-                f = open(self.track_json)
+            self.params_json = self.img_dir + params_json
+            if os.path.exists(self.params_json):
+                f = open(self.params_json)
                 temp = json.load(f)
                 f.close()
             else:
                 temp = params_json
             temp["duration"] = ratio / fps
-            f = open(self.track_json, "w")
+            f = open(self.params_json, "w")
             json.dump(temp, f)
             f.close()
             self.exit()
