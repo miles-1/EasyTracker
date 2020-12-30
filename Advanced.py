@@ -46,7 +46,7 @@ class Advanced:
         self.e8.insert(0, str(self.area_lower))
         self.e9 = tk.Entry(self.window, width=5)
         self.e9.insert(0, str(self.area_upper))
-        entries = [self.e1, self.e2, self.e3, self.e4, self.e5, self.e6, self.e7]
+        entries = [self.e1, self.e2, self.e3, self.e4, self.e5, self.e6, self.e7, self.e8, self.e9]
 
         self.b0 = tk.Button(self.window, text="Set & Exit", command=self.exit)
 
