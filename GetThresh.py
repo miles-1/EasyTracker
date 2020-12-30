@@ -46,7 +46,6 @@ class GetThresh:
         self.histTk = None
         self.display = None
         self.displayTk = None
-        self.canvas = None
         self.imgs = sorted(os.listdir(self.folder))
         for entry in range(len(self.imgs) - 1, -1, -1):
             temp = self.imgs[entry].rsplit(".")
@@ -81,24 +80,24 @@ class GetThresh:
         self.setup()
 
         # Make widgets to be placed in
-        self.canvas = tk.Canvas(self.window, width=900, height=max(250, self.picSize[1]))
-        self.canvas.create_image(self.picSize[0] / 2, self.picSize[1] / 2, anchor="center", image=self.displayTk)
-        self.canvas.create_image(700, 100, anchor="center", image=self.histTk)
+        self.l0 = tk.Label(self.window, image=self.displayTk)
+        self.l1 = tk.Label(self.window, image=self.histTk)
         self.slider = tk.Scale(self.window, from_=0, to=50, orient=tk.HORIZONTAL, length=297)
         self.slider.set(self.thresh)
-        self.l0 = tk.Label(self.window, text="Histogram of Pixel Intensities")
+        self.l2 = tk.Label(self.window, text="Histogram of Pixel Intensity")
         self.b0 = tk.Button(self.window, text="Show", command=self.getPic)
         self.b1 = tk.Button(self.window, text="Set & Run", command=self.setAndRun)
         self.b2 = tk.Button(self.window, text="Advanced", command=self.advanced)
         self.prog = Progress(self.window)
 
         self.getPic()
-        self.slider.place(x=550, y=155)
-        self.l0.place(x=615, y=20)
-        self.b0.place(x=600, y=200)
-        self.b1.place(x=655, y=200)
-        self.b2.place(x=740, y=200)
-        self.canvas.pack()
+        self.l0.grid(row=1, column=1, rowspan=5)
+        self.l1.grid(row=2, column=2, columnspan=3)
+        self.l2.grid(row=1, column=2, columnspan=3)
+        self.slider.grid(row=3, column=2, columnspan=3)
+        self.b0.grid(row=4, column=2)
+        self.b1.grid(row=4, column=3)
+        self.b2.grid(row=4, column=4)
 
     def setup(self):
         """Gets the desired threshold for cut-off from user."""
@@ -149,8 +148,8 @@ class GetThresh:
         (_, baw) = cv2.threshold(cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY), self.thresh, 255, cv2.THRESH_BINARY)
         self.display = cvToPil(baw)
         self.displayTk = ImageTk.PhotoImage(self.display)
-        self.canvas.create_image(self.picSize[0] / 2, self.picSize[1] / 2, anchor="center", image=self.displayTk)
-        self.canvas.pack()
+        self.l0 = tk.Label(self.window, image=self.displayTk)
+        self.l0.grid(row=1, column=1, rowspan=5)
 
     def selectContours(self, contours):
         temp = []
@@ -169,7 +168,7 @@ class GetThresh:
             self.b0.config(state=tk.DISABLED)
             self.b1.config(state=tk.DISABLED)
             self.b2.config(state=tk.DISABLED)
-            self.prog.place(x=600, y=230)
+            self.prog.grid(row=5, column=2, columnspan=3)
             self.prog.config(length=len(self.imgs) * 2 + 10)
 
             # diff 1 files

@@ -31,20 +31,20 @@ class Main:
 
         self.l0 = tk.Label(root, text="EasyTracker", font=('Helvetica', 30))
         self.l1 = tk.Label(root, text="Get help in the tab above", font=('Helvetica', 9, 'italic'))
-        self.b0 = tk.Button(root, text="1) Make Frames/Start Where You Left Off ", command=self.getFrames, **args1)
-        self.b1 = tk.Button(root, text="Optional -  Set Distance per Pixel      ", command=self.setPixels, **args2)
-        self.b2 = tk.Button(root, text="2)       Set Threshold and Make Files   ", command=self.getThresh, **args1)
-        self.b3 = tk.Button(root, text="3)      Make or Select track.json File  ", command=self.makeTrack, **args1)
-        self.b4 = tk.Button(root, text="4)       Make Masked Video (Validate)   ", command=self.makeVideo, **args1)
-        self.b5 = tk.Button(root, text="Optional -      Check Tracks            ", command=self.checkMask, **args2)
-        self.b6 = tk.Button(root, text="5)           Generate .csv data         ", command=self.createCsv, **args1)
-        self.b7 = tk.Button(root, text="                    Quit                ", command=self.quit, **args1)
+        self.b0 = tk.Button(root, text=" 1) Make Frames/Start Where You Left Off ", command=self.getFrames, **args1)
+        self.b1 = tk.Button(root, text=" Optional -  Set Distance per Pixel      ", command=self.setPixels, **args2)
+        self.b2 = tk.Button(root, text=" 2)       Set Threshold and Make Files   ", command=self.getThresh, **args1)
+        self.b3 = tk.Button(root, text=" 3)      Make or Select track.json File  ", command=self.makeTrack, **args1)
+        self.b4 = tk.Button(root, text=" 4)       Make Masked Video (Validate)   ", command=self.makeVideo, **args1)
+        self.b5 = tk.Button(root, text=" Optional -      Check Tracks            ", command=self.checkMask, **args2)
+        self.b6 = tk.Button(root, text=" 5)           Generate .csv data         ", command=self.createCsv, **args1)
+        self.b7 = tk.Button(root, text="                     Quit                ", command=self.quit, **args1)
 
         self.widgets = [self.l0, self.l1, self.b0, self.b1, self.b2,
                         self.b3, self.b4, self.b5, self.b6, self.b7]
 
         for widget in self.widgets:
-            widget.pack(pady=5)
+            widget.pack(padx=5, pady=5)
 
         tk.mainloop()
 

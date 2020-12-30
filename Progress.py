@@ -14,6 +14,9 @@ class Progress:
     def place(self, **kwargs):
         self.progress.place(**kwargs)
 
+    def grid(self, **kwargs):
+        self.progress.grid(**kwargs)
+
     def config(self, length):
         self.length = int(length)
 

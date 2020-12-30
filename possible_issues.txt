@@ -1,0 +1,1 @@
+- the scaling down of pictures with thumbnail in SetPixels.py could cause incorrect proportions for the scale.
