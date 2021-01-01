@@ -5,7 +5,7 @@ from MakeTrack import MakeTrack
 from MakeVideo import MakeVideo
 from CheckMask import CheckMask
 from CreateCsv import CreateCsv
-from Config import CONFIG, args1, args2, em1
+from Config import CONFIG, args1, args2, em1, em2
 
 import tkinter as tk
 from tkinter import messagebox
@@ -21,8 +21,8 @@ class Main:
     def __init__(self, root):
         self.root = root
         self.root.title("EasyTracker")
-        self.img_dir = "/Users/miles/Documents/Python Projects/coding etc/Ed Hammill/Example sequence"  # DEV: change to ""
-        self.params_f = self.img_dir + params  # DEV: change to ""
+        self.img_dir = ""  # "/Users/miles/Documents/Python Projects/coding etc/Ed Hammill/Example sequence"  # DEV: change to ""
+        self.params_f = ""  # self.img_dir + params  # DEV: change to ""
         self.diff_dirs = ["", ""]
         self.contour_json = ""
         self.track_json = ""
@@ -40,8 +40,7 @@ class Main:
         self.b6 = tk.Button(root, text=" 5)           Generate .csv data         ", command=self.createCsv, **args1)
         self.b7 = tk.Button(root, text="                     Quit                ", command=self.quit, **args1)
 
-        self.widgets = [self.l0, self.l1, self.b0, self.b1, self.b2,
-                        self.b3, self.b4, self.b5, self.b6, self.b7]
+        self.widgets = [self.l0, self.l1, self.b0, self.b1, self.b2, self.b3, self.b4, self.b5, self.b6, self.b7]
 
         for widget in self.widgets:
             widget.pack(padx=5, pady=5)
@@ -57,8 +56,8 @@ class Main:
         self.img_dir = img_dir if img_dir else self.img_dir
         self.params_f = params_f if params_f else self.params_f
         self.diff_dirs = diff_dirs if diff_dirs else self.diff_dirs
-        self.track_json = track_json if track_json else self.track_json
         self.contour_json = contour_json if contour_json else self.contour_json
+        self.track_json = track_json if track_json else self.track_json
         # Change button colors
         self.b0.config(**(args2 if self.img_dir else args1))
         self.b2.config(**(args2 if self.contour_json else args1))
@@ -94,8 +93,7 @@ class Main:
 
     def makeTrack(self):
         if not self.diff_dirs[0]:
-            pass
-            # TODO: Warning message to point program towards frames & differences folders
+            messagebox.showerror(title="Premature Selection", message=em1)
         else:
             # TODO: ask if they want to use existing track files or make new ones
             makeNew = False
